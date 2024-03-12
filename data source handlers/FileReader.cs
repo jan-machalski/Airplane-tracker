@@ -8,7 +8,7 @@ namespace projekt_Jan_Machalski
 {
     public class FileReader
     {
-        public List<string> ReadFromFile(string filePath)
+        public static List<string> ReadFromFile(string filePath)
         {
             List<string> dataList = new List<string>();
 
