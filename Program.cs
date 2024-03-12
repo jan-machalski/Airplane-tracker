@@ -20,5 +20,6 @@ namespace projekt_Jan_Machalski
 
             simulation.RunSimulation();         
         }
+
     }
 }
