@@ -45,6 +45,7 @@ namespace projekt_Jan_Machalski
             if(!FlightInfo.ContainsKey(flight.ID))
                 FlightInfo.Add(flight.ID, flight);
         }
+
         public void AddObject(Passenger passenger)
         {
             if(!PassengerInfo.ContainsKey(passenger.ID))
