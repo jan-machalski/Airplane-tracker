@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using projekt_Jan_Machalski;
 
 
 namespace projekt_Jan_Machalski
 {
     [Serializable]
-    public class PassengerPlane: Plane
+    public class PassengerPlane: Plane,IReportable
     {
         public UInt16 FirstClassSize { get; set; }
 
@@ -26,6 +27,10 @@ namespace projekt_Jan_Machalski
             FirstClassSize = firstClassSize;
             BuisnessClassSize = buisnessClassSize;
             EconomyClassSize = economyClassSize;
+        }
+        public override string Accept(IMedia media)
+        {
+            return media.Report(this);
         }
     }
 }

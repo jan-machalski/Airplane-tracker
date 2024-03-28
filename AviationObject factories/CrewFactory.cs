@@ -8,6 +8,7 @@ namespace projekt_Jan_Machalski
 {
     public class CrewFactory: AviationObjectFactory
     {
+        Database database = Database.Instance;
         public override AviationObject CreateAviationObject(List<string> data)
         {
             var newObject = new Crew(
@@ -18,7 +19,7 @@ namespace projekt_Jan_Machalski
                 data[5], 
                 UInt16.Parse(data[6]), 
                 data[7]);
-            AddToInfoDictionary( newObject );
+            database.AddObject(newObject);
             return newObject;
         }
         public override AviationObject CreateAviationObject(byte[] data)
@@ -33,17 +34,9 @@ namespace projekt_Jan_Machalski
                 Encoding.ASCII.GetString(data,NL+33,EL),
                 BitConverter.ToUInt16(data,33+NL+EL),
                 Encoding.ASCII.GetString(data,35+NL+EL,1));
-            AddToInfoDictionary(newObject);
+            database.AddObject(newObject);
             return newObject;
         
-        }
-        public void AddToInfoDictionary(Crew crew)
-        {
-            AviationObjectFactoryManager manager = AviationObjectFactoryManager.Instance;
-            if (!manager.CrewInfo.ContainsKey(crew.ID))
-            {
-                manager.CrewInfo.Add(crew.ID, crew);
-            }
         }
     }
 }

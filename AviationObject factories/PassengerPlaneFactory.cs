@@ -8,6 +8,7 @@ namespace projekt_Jan_Machalski
 {
     public class PassengerPlaneFactory:AviationObjectFactory
     {
+        Database database = Database.Instance;
         public override AviationObject CreateAviationObject(List<string> data)
         {
             var newObject = new PassengerPlane(
@@ -18,7 +19,7 @@ namespace projekt_Jan_Machalski
                 UInt16.Parse(data[5]), 
                 UInt16.Parse(data[6]), 
                 UInt16.Parse(data[7]));
-            AddToInfoDictionary( newObject );
+            database.AddObject(newObject);
             return newObject;
         }
         public override AviationObject CreateAviationObject(byte[] data)
@@ -32,16 +33,8 @@ namespace projekt_Jan_Machalski
                 BitConverter.ToUInt16(data, 30 + ML),
                 BitConverter.ToUInt16(data, 32 + ML),
                 BitConverter.ToUInt16(data, 34 + ML));
-            AddToInfoDictionary(newObject);
+            database.AddObject(newObject);
             return newObject;
-        }
-        public void AddToInfoDictionary(PassengerPlane passengerPlane)
-        {
-            AviationObjectFactoryManager manager = AviationObjectFactoryManager.Instance;
-            if (!manager.PassengerPlaneInfo.ContainsKey(passengerPlane.ID))
-            {
-                manager.PassengerPlaneInfo.Add(passengerPlane.ID, passengerPlane);
-            }
         }
     }
 }

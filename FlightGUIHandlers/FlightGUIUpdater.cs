@@ -14,13 +14,13 @@ namespace projekt_Jan_Machalski
 
         public static void UpdateMap(object? sender, ElapsedEventArgs? e)
         {
-            AviationObjectFactoryManager manager = AviationObjectFactoryManager.Instance;
+            Database database = Database.Instance;
           
             FlightsGUIData data = new FlightsGUIData();
 
             List<FlightGUI> newFlightsData = new List<FlightGUI>();
 
-            foreach(var f in manager.FlightInfo) // create FlightGUI structure for every flight with available info
+            foreach(var f in database.FlightInfo) // create FlightGUI structure for every flight with available info
             {
                 FlightGUI newData = new FlightGuiAdapter(f.Value);
                 newFlightsData.Add(newData);

@@ -9,6 +9,7 @@ namespace projekt_Jan_Machalski
 {
     public class AirportFactory:AviationObjectFactory
     {
+        private Database database = Database.Instance;
         public override AviationObject CreateAviationObject(List<string> data)
         {
             var provider = new NumberFormatInfo();
@@ -22,7 +23,7 @@ namespace projekt_Jan_Machalski
                 Single.Parse(data[5], provider), 
                 Single.Parse(data[6], provider), 
                 data[7]);
-            AddToInfoDictionary(newObject);
+            database.AddObject(newObject);
             return newObject;
         }
         public override AviationObject CreateAviationObject(byte[] data)
@@ -37,16 +38,8 @@ namespace projekt_Jan_Machalski
                 BitConverter.ToSingle(data, 28 + NL),
                 Encoding.ASCII.GetString(data, 32 + NL,3)
                 );
-            AddToInfoDictionary(newObject);
+            database.AddObject( newObject );
             return newObject;
-        }
-        public void AddToInfoDictionary(Airport airport)
-        {
-            AviationObjectFactoryManager manager = AviationObjectFactoryManager.Instance;
-            if(!manager.AirportInfo.ContainsKey(airport.ID))
-            {
-                manager.AirportInfo.Add(airport.ID, airport);
-            }
         }
     }
 }

@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using projekt_Jan_Machalski;
 
 
 namespace projekt_Jan_Machalski
 {
     [Serializable]
-    public class CargoPlane: Plane
+    public class CargoPlane: Plane,IReportable
     {
         public Single MaxLoad { get; set; }
         public CargoPlane():base()
@@ -17,6 +18,10 @@ namespace projekt_Jan_Machalski
         public CargoPlane(UInt64 id, string serial, string country, string model, Single maxLoad):base(id,"Cargo Plane",serial,country,model)
         {
             MaxLoad = maxLoad;
+        }
+        public override string Accept(IMedia media)
+        {
+            return media.Report(this);
         }
     }
 }

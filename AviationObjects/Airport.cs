@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ExCSS;
+using projekt_Jan_Machalski;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -8,7 +10,7 @@ using System.Text;
 namespace projekt_Jan_Machalski
 {
     [Serializable]
-    public class Airport: AviationObject
+    public class Airport: AviationObject, IReportable
     {
         public string Name { get; set; }
         public string Code { get; set; }
@@ -33,6 +35,10 @@ namespace projekt_Jan_Machalski
             Latitude = latitude;
             AMSL = amsl;
             Country = country;
+        }
+        public override string Accept(IMedia media)
+        {
+            return media.Report(this);
         }
     }
 }

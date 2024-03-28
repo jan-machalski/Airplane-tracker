@@ -9,6 +9,7 @@ namespace projekt_Jan_Machalski
 {
     public class PassengerFactory: AviationObjectFactory
     {
+        Database database = Database.Instance;
         public override AviationObject CreateAviationObject(List<string> data)
         {
             var newObject = new Passenger(
@@ -19,7 +20,7 @@ namespace projekt_Jan_Machalski
                 data[5], 
                 data[6], 
                 UInt64.Parse(data[7]));
-            AddToInfoDictionary( newObject );
+            database.AddObject(newObject);
             return newObject;
         }
         public override AviationObject CreateAviationObject(byte[] data)
@@ -34,16 +35,8 @@ namespace projekt_Jan_Machalski
                 Encoding.ASCII.GetString(data, NL + 33, EL),
                 Encoding.ASCII.GetString(data, 34 + NL + EL, 1),
                 BitConverter.ToUInt64(data,34+NL+EL));
-            AddToInfoDictionary(newObject);
+            database.AddObject(newObject);
             return newObject;
-        }
-        public void AddToInfoDictionary(Passenger passenger)
-        {
-            AviationObjectFactoryManager manager = AviationObjectFactoryManager.Instance;
-            if (!manager.PassengerInfo.ContainsKey(passenger.ID))
-            {
-                manager.PassengerInfo.Add(passenger.ID, passenger);
-            }
         }
     }
 }

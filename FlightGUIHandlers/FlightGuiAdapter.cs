@@ -11,7 +11,7 @@ namespace projekt_Jan_Machalski
     public class FlightGuiAdapter:FlightGUI
     {
 
-        private static AviationObjectFactoryManager manager = AviationObjectFactoryManager.Instance;
+        private static Database database = Database.Instance;
 
         public FlightGuiAdapter(Flight flight)
         {
@@ -19,7 +19,7 @@ namespace projekt_Jan_Machalski
             float progress = GetProgress(flight.TakeOffTime,flight.LandingTime);
             WorldPosition position = GetPosition(flight, progress);
             if (position.Latitude == oldPosition.Latitude && position.Longitude == oldPosition.Longitude) // is the plane moving at all?
-                MapCoordRotation = GetRotation(new WorldPosition(manager.AirportInfo[flight.TargetID].Latitude, manager.AirportInfo[flight.TargetID].Longitude), oldPosition);
+                MapCoordRotation = GetRotation(new WorldPosition(database.AirportInfo[flight.TargetID].Latitude, database.AirportInfo[flight.TargetID].Longitude), oldPosition);
             else
                 MapCoordRotation = GetRotation(position, oldPosition);
             WorldPosition = position;
@@ -44,8 +44,8 @@ namespace projekt_Jan_Machalski
         }
         private static WorldPosition GetPosition(Flight f,float progress) // calculate current flight position based on takeoff and landing times and the progress
         {
-            double originLongitude = manager.AirportInfo[f.OriginID].Longitude;
-            double targetLongitude = manager.AirportInfo[f.TargetID].Longitude;
+            double originLongitude = database.AirportInfo[f.OriginID].Longitude;
+            double targetLongitude = database.AirportInfo[f.TargetID].Longitude;
 
             if (originLongitude - targetLongitude > 180) // if the shortest way crosses International Date Line - West to east or east to west
                 targetLongitude += 360;
@@ -56,7 +56,7 @@ namespace projekt_Jan_Machalski
                 currentLongitude -= 360;
             return new WorldPosition()
             {
-                Latitude = manager.AirportInfo[f.OriginID].Latitude + progress * (manager.AirportInfo[f.TargetID].Latitude - manager.AirportInfo[f.OriginID].Latitude),
+                Latitude = database.AirportInfo[f.OriginID].Latitude + progress * (database.AirportInfo[f.TargetID].Latitude - database.AirportInfo[f.OriginID].Latitude),
                 Longitude = currentLongitude,
             };
         }

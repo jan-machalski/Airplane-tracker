@@ -15,14 +15,6 @@ namespace projekt_Jan_Machalski
         public static AviationObjectFactoryManager Instance => instance.Value;
 
         private Database database = Database.Instance;
-
-        public Dictionary<UInt64, Airport> AirportInfo = new Dictionary<UInt64, Airport>();
-        public Dictionary<UInt64,Cargo> CargoInfo = new Dictionary<UInt64, Cargo>();
-        public Dictionary<UInt64,CargoPlane> CargoPlaneInfo = new Dictionary<UInt64,CargoPlane>();
-        public Dictionary<UInt64,Crew> CrewInfo = new Dictionary<UInt64,Crew>();
-        public Dictionary<UInt64,Flight> FlightInfo = new Dictionary<UInt64,Flight>();
-        public Dictionary<UInt64,Passenger> PassengerInfo = new Dictionary<UInt64,Passenger>();
-        public Dictionary<UInt64,PassengerPlane> PassengerPlaneInfo = new Dictionary<UInt64,PassengerPlane>();
         
         // the dictionary links the type code with the correct factory 
         // should be expanded in case a new type of aviation object is added

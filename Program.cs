@@ -14,7 +14,8 @@ namespace projekt_Jan_Machalski
         static void Main()
         {
             TestWithStage1data();
-
+            Database database = Database.Instance;
+            
         }
 
         static void TestWithStage1data()

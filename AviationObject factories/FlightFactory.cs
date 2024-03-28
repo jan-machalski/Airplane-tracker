@@ -9,6 +9,7 @@ namespace projekt_Jan_Machalski
 {
     public class FlightFactory:AviationObjectFactory
     {
+        Database database = Database.Instance;
         public override AviationObject CreateAviationObject(List<string> data)
         {
             var provider = new NumberFormatInfo();
@@ -26,7 +27,7 @@ namespace projekt_Jan_Machalski
                 UInt64.Parse(data[9]),
                 data[10].Trim('[', ']').Split(';').Select(UInt64.Parse).ToArray(),
                 data[11].Trim('[', ']').Split(';').Select(UInt64.Parse).ToArray());
-            AddToInfoDictionary(newObject);
+            database.AddObject(newObject);
             return newObject;
         }
         public override AviationObject CreateAviationObject(byte[] data)
@@ -54,22 +55,14 @@ namespace projekt_Jan_Machalski
                 BitConverter.ToUInt64(data,23),
                 $"{TakeoffTime.Hour:D2}:{TakeoffTime.Minute:D2}",
                 $"{LandingTime.Hour:D2}:{LandingTime.Minute:D2}",
-                manager.AirportInfo[originID].Longitude,
-                manager.AirportInfo[originID].Latitude,
-                manager.AirportInfo[originID].AMSL,
+                database.AirportInfo[originID].Longitude,
+                database.AirportInfo[originID].Latitude,
+                database.AirportInfo[originID].AMSL,
                 BitConverter.ToUInt64(data,47),
                 crew,
                 load);
-            AddToInfoDictionary(newObject );
+            database.AddObject(newObject);
             return newObject;
-        }
-        public void AddToInfoDictionary(Flight flight)
-        {
-            AviationObjectFactoryManager manager = AviationObjectFactoryManager.Instance;
-            if (!manager.FlightInfo.ContainsKey(flight.ID))
-            {
-                manager.FlightInfo.Add(flight.ID, flight);
-            }
         }
     }
 }
