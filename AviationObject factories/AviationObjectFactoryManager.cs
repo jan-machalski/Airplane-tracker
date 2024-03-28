@@ -14,6 +14,8 @@ namespace projekt_Jan_Machalski
         private AviationObjectFactoryManager() { }
         public static AviationObjectFactoryManager Instance => instance.Value;
 
+        private Database database = Database.Instance;
+
         public Dictionary<UInt64, Airport> AirportInfo = new Dictionary<UInt64, Airport>();
         public Dictionary<UInt64,Cargo> CargoInfo = new Dictionary<UInt64, Cargo>();
         public Dictionary<UInt64,CargoPlane> CargoPlaneInfo = new Dictionary<UInt64,CargoPlane>();

@@ -18,9 +18,9 @@ namespace projekt_Jan_Machalski
             WorldPosition oldPosition = new WorldPosition(flight.Latitude, flight.Longitude);
             float progress = GetProgress(flight.TakeOffTime,flight.LandingTime);
             WorldPosition position = GetPosition(flight, progress);
-           if (position.Latitude == oldPosition.Latitude && position.Longitude == oldPosition.Longitude) // is the plane moving at all?
+            if (position.Latitude == oldPosition.Latitude && position.Longitude == oldPosition.Longitude) // is the plane moving at all?
                 MapCoordRotation = GetRotation(new WorldPosition(manager.AirportInfo[flight.TargetID].Latitude, manager.AirportInfo[flight.TargetID].Longitude), oldPosition);
-           else
+            else
                 MapCoordRotation = GetRotation(position, oldPosition);
             WorldPosition = position;
             ID = flight.ID;
