@@ -57,25 +57,7 @@ namespace projekt_Jan_Machalski
             NSS_thread.IsBackground = true;
             NSS_thread.Start();
 
-            Console.WriteLine("Commands:\n-print:\tcreate a snapshot\n-exit:\texit programm");
-            do
-            {
-                command = Console.ReadLine();
-                switch (command)
-                {
-                    case "print":
-                        CreateSnapshot();
-                        break;
-                    case "exit":
-                        Console.WriteLine("exiting...");
-                        running = false;
-                        break;
-                    default:
-                        Console.WriteLine("incorrect command");
-                        break;
-                }
-
-            } while (running);
+           
         }
     }
 }

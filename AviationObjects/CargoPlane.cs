@@ -19,7 +19,7 @@ namespace projekt_Jan_Machalski
         {
             MaxLoad = maxLoad;
         }
-        public override string Accept(IMedia media)
+        public string Report(IMedia media)
         {
             return media.Report(this);
         }

@@ -28,7 +28,7 @@ namespace projekt_Jan_Machalski
             BuisnessClassSize = buisnessClassSize;
             EconomyClassSize = economyClassSize;
         }
-        public override string Accept(IMedia media)
+        public string Report(IMedia media)
         {
             return media.Report(this);
         }

@@ -10,6 +10,6 @@ namespace projekt_Jan_Machalski
 {
     public interface IReportable
     {
-        string Accept(IMedia media);
+        string Report(IMedia media);
     }
 }

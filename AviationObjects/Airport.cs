@@ -36,7 +36,7 @@ namespace projekt_Jan_Machalski
             AMSL = amsl;
             Country = country;
         }
-        public override string Accept(IMedia media)
+        public string Report(IMedia media)
         {
             return media.Report(this);
         }
