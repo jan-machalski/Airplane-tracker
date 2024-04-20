@@ -22,8 +22,9 @@ namespace projekt_Jan_Machalski
 
             foreach(var f in database.FlightInfo) // create FlightGUI structure for every flight with available info
             {
-                FlightGUI newData = new FlightGuiAdapter(f.Value);
-                newFlightsData.Add(newData);
+                FlightGuiAdapter newData = new FlightGuiAdapter(f.Value);
+                if(newData.Progress > 0)
+                    newFlightsData.Add(newData);
                 f.Value.Latitude = newData.WorldPosition.Latitude;
                 f.Value.Longitude = newData.WorldPosition.Longitude;
             }

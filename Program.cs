@@ -13,14 +13,19 @@ namespace projekt_Jan_Machalski
     {
         static void Main()
         {
+            Logger.LogMessage("Program started!");
             RunCommandPrompt();
         }
 
         static void RunCommandPrompt()
         {
-            string FTR_file_path = "example_data.ftr";
-            int min_offset = 1;
-            int max_offset = 5;
+            string FTR_file_path = "example.ftre";
+            int min_offset = 100;
+            int max_offset = 200;
+            Database database = Database.Instance;
+            bool ftrLoaded = false;
+            bool trackerStarted = false;
+            
 
             NSS_Simulation simulation = new NSS_Simulation(FTR_file_path, min_offset, max_offset);
 
@@ -42,12 +47,20 @@ namespace projekt_Jan_Machalski
                 {
                     case "ftr":
                         LoadFTR();
+                        ftrLoaded = true;
                         break;
                     case "run":
-                        simulation.RunSimulation();
+                        if (ftrLoaded == false)
+                            Console.WriteLine("FTR file has to be loaded before starting simulation");
+                        else
+                            simulation.RunSimulation();
                         break;
                     case "track":
-                        FlightGUIRunner.RunFlightGUI();
+                        if (!trackerStarted)
+                            FlightGUIRunner.RunFlightGUI();
+                        else
+                            Console.WriteLine("Flight tracker GUI can only be started once per each programm start");
+                        trackerStarted = true;
                         break;
                     case "report":
                         GenerateAllNews(); 
@@ -57,6 +70,7 @@ namespace projekt_Jan_Machalski
                         break;
                     case "exit":
                         Console.WriteLine("exiting...");
+                        Logger.LogMessage("Program exited!\n");
                         running = false;
                         break;
                     default:

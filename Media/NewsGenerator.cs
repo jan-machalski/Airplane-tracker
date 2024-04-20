@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
-using System.Collections;
 
 namespace projekt_Jan_Machalski
 {

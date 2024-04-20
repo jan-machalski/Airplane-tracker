@@ -8,7 +8,7 @@ using System.Text;
 namespace projekt_Jan_Machalski
 {
     [Serializable]
-    public class Cargo: AviationObject
+    public class Cargo: Load
     {
         public Single Weight { get; set; }
         public string Code { get; set; }

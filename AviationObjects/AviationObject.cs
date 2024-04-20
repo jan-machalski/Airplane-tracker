@@ -18,7 +18,7 @@ namespace projekt_Jan_Machalski
     public abstract class AviationObject
     {
         public UInt64 ID { get; set; }
-        public static string ObjectType;
+        public static string? ObjectType;
 
         public AviationObject() 
         {

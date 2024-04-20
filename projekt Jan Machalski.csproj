@@ -9,6 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="NetworkSourceSimulator.deps.json" />
+    <None Remove="NetworkSourceSimulator.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FlightTrackerGUI" Version="1.0.0" />
   </ItemGroup>
 
@@ -19,6 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="example.ftre">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="example_data.ftr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

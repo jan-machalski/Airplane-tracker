@@ -16,6 +16,9 @@ namespace projekt_Jan_Machalski
         public NSS_Simulation(string FTR_file_path,int min_offset,int max_offset)
         {
             source = new NetworkSourceSimulator.NetworkSourceSimulator(FTR_file_path, min_offset, max_offset);
+            source.OnIDUpdate += HandleIDChange;
+            source.OnPositionUpdate += HandlePosChange;
+            source.OnContactInfoUpdate += HandleContactInfoCHange;
             running = false;
         }
 
@@ -48,7 +51,6 @@ namespace projekt_Jan_Machalski
                 return;
             }
 
-            string command;
             running = true;
 
             source.OnNewDataReady += OnNewDataReadyHandler;
@@ -56,8 +58,21 @@ namespace projekt_Jan_Machalski
             Thread NSS_thread = new Thread(new ThreadStart(source.Run));
             NSS_thread.IsBackground = true;
             NSS_thread.Start();
-
-           
+        }
+        private void HandleContactInfoCHange(object sender, ContactInfoUpdateArgs args)
+        {
+            Database database = Database.Instance;
+            database.UpdateContactInfo(args.ObjectID, args.PhoneNumber, args.EmailAddress);
+        }
+        private void HandleIDChange(object sender ,IDUpdateArgs args)
+        {
+            Database database = Database.Instance;
+            database.ChangeID(args.ObjectID, args.NewObjectID);
+        }
+        private void HandlePosChange(object sender, PositionUpdateArgs args)
+        {
+            Database database = Database.Instance;
+            database.UpdateFlightPos(args.ObjectID, args.Longitude, args.Latitude, args.AMSL);
         }
     }
 }
