@@ -63,7 +63,7 @@ namespace projekt_Jan_Machalski
                 Longitude = currentLongitude,
             };
         }
-        private static float GetProgress(string takeOffTime, string landingTime) // calculate progress of the flight
+        public static float GetProgress(string takeOffTime, string landingTime) // calculate progress of the flight
         {
             DateTime currentTime = DateTime.Now; 
 

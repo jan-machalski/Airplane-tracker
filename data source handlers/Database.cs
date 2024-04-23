@@ -109,6 +109,23 @@ namespace projekt_Jan_Machalski
                 Logger.LogMessage($"Flight (id: {id}) succesfully changed position: AMSL: from {oldAMSL} to {AMSL}, " +
                     $"Longitude: from {oldLongitude} to {newLongitude}, Latitude: from {oldLatitude} to {newLatitude}");
             }
+            else if(CargoPlaneInfo.ContainsKey(id) || PassengerPlaneInfo.ContainsKey(id))
+            {
+                foreach(var f in FlightInfo)
+                {
+                    var time = f.Value.GetFlightTime();
+                    if(FlightGuiAdapter.GetProgress(time.takeOffTime,time.landingTime)>0 && f.Value.Plane.ID == id)
+                    {
+                        var oldAMSL = f.Value.AMSL;
+                        var oldLongitude = f.Value.Longitude;
+                        var oldLatitude = f.Value.Latitude;
+                        FlightInfo[id].AMSL = AMSL;
+                        FlightInfo[id] = new FlightWithUpdatedPos(FlightInfo[id], newLongitude, newLatitude);
+                        Logger.LogMessage($"Plane (id: {id}) succesfully changed position: AMSL: from {oldAMSL} to {AMSL}, " +
+                            $"Longitude: from {oldLongitude} to {newLongitude}, Latitude: from {oldLatitude} to {newLatitude}");
+                    }
+                }
+            }
             else
             {
                 Logger.LogMessage($"Unable to change flight position - flight with given id ({id}) does not exist");
@@ -148,6 +165,13 @@ namespace projekt_Jan_Machalski
                 CargoPlaneInfo.Add(newID, value);
                 Logger.LogMessage($"Cargo plane (ID: {oldID}) changed ID to {newID}");
             }
+            else if (PassengerPlaneInfo.ContainsKey(oldID))
+            {
+                var value = PassengerPlaneInfo[oldID];
+                PassengerPlaneInfo.Remove(oldID);
+                PassengerPlaneInfo.Add(newID, value);
+                Logger.LogMessage($"Passenger plane (ID: {oldID}) changed ID to {newID}");
+            }
             else if (CrewInfo.ContainsKey(oldID))
             {
                 var value = CrewInfo[oldID];
@@ -169,13 +193,7 @@ namespace projekt_Jan_Machalski
                 PassengerInfo.Add(newID, value);
                 Logger.LogMessage($"Passenger (ID: {oldID}) changed ID to {newID}");
             }
-            else if(PassengerPlaneInfo.ContainsKey(oldID))
-            {
-                var value = PassengerPlaneInfo[oldID];
-                PassengerPlaneInfo.Remove(oldID);
-                PassengerPlaneInfo.Add(newID , value);
-                Logger.LogMessage($"Passenger plane (ID: {oldID}) changed ID to {newID}");
-            }
+           
             UsedIDs.Remove(oldID);
             UsedIDs.Add(newID);
         }
