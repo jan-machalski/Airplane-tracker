@@ -13,6 +13,15 @@ namespace projekt_Jan_Machalski
     {
         static void Main()
         {
+            LoadFTR();
+            string command1 = "delete Airport where ID = 5";
+            string command2 = "display * from Airport where ID <= 8 and ID >= 3";
+            var test1 = new DeleteCommand(command1);
+
+            test1.Execute();
+            var test2 = new DisplayCommand(command2);
+            test2.Execute();
+
             Logger.LogMessage("Program started!");
             RunCommandPrompt();
         }

@@ -30,7 +30,23 @@ namespace projekt_Jan_Machalski
             ID = id;
             ObjectType = type;
         }
+        public virtual Dictionary<string,string> GetInfoDictionary()
+        {
+            return null;
+        }
+        public virtual void UpdateObject(Dictionary<string,string> info) { }
+        public (bool valid, string info) IsDictionaryValid(Dictionary<string, string> dic)
+        {
+            var validDic = this.GetInfoDictionary();
+            foreach (var p in dic)
+            {
+                if (!validDic.ContainsKey(p.Key))
+                {
+                    return (false, $"invalid variable name: {p.Key}");
+                }
+            }
+            return (true, "");
+        }
 
-       
     }
 }

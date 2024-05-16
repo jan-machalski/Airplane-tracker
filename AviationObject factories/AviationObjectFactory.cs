@@ -10,5 +10,6 @@ namespace projekt_Jan_Machalski
     {
         public abstract AviationObject CreateAviationObject(List<string> data);
         public abstract AviationObject CreateAviationObject(byte[] data);
+        public abstract AviationObject CreateAviationObject(Dictionary<string, string> data);
     }
 }

@@ -69,5 +69,11 @@ namespace projekt_Jan_Machalski
             }
             throw new ArgumentException("Unknown type: " + code);
         }
+        public AviationObject CreateObject(string code,Dictionary<string,string> data)
+        {
+            if (factories.TryGetValue(code, out var factory))
+                return factory.CreateAviationObject(data);
+            throw new ArgumentException("Unknown type: " + code);
+        }
     }
 }

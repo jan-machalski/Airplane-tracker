@@ -38,5 +38,10 @@ namespace projekt_Jan_Machalski
             return newObject;
         
         }
+        public override AviationObject CreateAviationObject(Dictionary<string, string> data)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

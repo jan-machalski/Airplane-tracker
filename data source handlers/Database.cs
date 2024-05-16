@@ -77,6 +77,57 @@ namespace projekt_Jan_Machalski
                 UsedIDs.Add(passengerPlane.ID);
             }
         }
+        public List<AviationObject> GetObjectList(string fieldName)
+        {
+            List<AviationObject> result = new List<AviationObject>();
+           switch(fieldName)
+            {
+                case ("Airport"):
+                    foreach (var p in AirportInfo) result.Add(p.Value);
+                    break;
+                case ("Cargo"):
+                    foreach(var p in CargoInfo) result.Add(p.Value);
+                    break;
+                case ("CargoPlane"):
+                    foreach( var p in CargoPlaneInfo) result.Add(p.Value);
+                    break;
+                case ("Crew"):
+                    foreach(var p in CrewInfo) result.Add(p.Value);
+                    break;
+                case ("Flight"):
+                    foreach(var p in FlightInfo) result.Add(p.Value);
+                    break;
+                case ("Passenger"):
+                    foreach(var p in PassengerInfo) result.Add(p.Value);
+                    break;
+                case ("PassengerPlane"):
+                    foreach(var p in PassengerPlaneInfo)result.Add(p.Value);
+                    break;
+                default:
+                    throw new InvalidDataException($"Invalid object class name: {fieldName}");
+
+            }
+            return result;
+        }
+        public void DeleteObject(UInt64 id)
+        {
+            if (!UsedIDs.Contains(id))
+                return;
+            if(AirportInfo.ContainsKey(id))
+                AirportInfo.Remove(id);
+            else if(CargoInfo.ContainsKey(id))
+                CargoInfo.Remove(id);
+            else if(CargoPlaneInfo.ContainsKey(id))
+                CargoPlaneInfo.Remove(id);
+            else if(CrewInfo.ContainsKey(id))
+                CrewInfo.Remove(id);
+            else if(FlightInfo.ContainsKey(id))
+                FlightInfo.Remove(id);
+            else if(PassengerInfo.ContainsKey(id))
+                PassengerInfo.Remove(id);
+            else if(PassengerPlaneInfo.ContainsKey(id))
+                PassengerPlaneInfo.Remove(id);
+        }
         public void UpdateContactInfo(UInt64 id, string phoneNumber, string emailAdress)
         {
             if (PassengerInfo.ContainsKey(id))
@@ -123,6 +174,7 @@ namespace projekt_Jan_Machalski
                         FlightInfo[id] = new FlightWithUpdatedPos(FlightInfo[id], newLongitude, newLatitude);
                         Logger.LogMessage($"Plane (id: {id}) succesfully changed position: AMSL: from {oldAMSL} to {AMSL}, " +
                             $"Longitude: from {oldLongitude} to {newLongitude}, Latitude: from {oldLatitude} to {newLatitude}");
+                        break;
                     }
                 }
             }

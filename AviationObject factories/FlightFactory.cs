@@ -64,5 +64,10 @@ namespace projekt_Jan_Machalski
             database.AddObject(newObject);
             return newObject;
         }
+        public override AviationObject CreateAviationObject(Dictionary<string, string> data)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }
