@@ -35,5 +35,49 @@ namespace projekt_Jan_Machalski
             Class = passenger_class;
             Miles = miles;
         }
+        public Passenger(Dictionary<string,string> dic):this()
+        {
+            UpdateObject(dic);
+        }
+        public override Dictionary<string, string> GetInfoDictionary()
+        {
+            return new Dictionary<string, string>
+            {
+                { "ID", this.ID.ToString() },
+                { "Name", this.Name },
+                { "Age", this.Age.ToString() },
+                { "Phone", this.Phone },
+                { "Email", this.Email },
+                { "Class", this.Class },
+                { "Miles", this.Miles.ToString() }
+            };
+        }
+        public override void UpdateObject(Dictionary<string, string> info, bool newObject = false)
+        {
+            var valid = IsDictionaryValid(info);
+            if (!valid.valid)
+                throw new InvalidDataException(valid.info);
+            UpdateID(info, newObject);
+            if(info.ContainsKey("Name"))
+                this.Name = info["Name"];
+            if(info.ContainsKey("Age"))
+            {
+                UInt64 newAge;
+                ParseUIntField(info["Age"], out newAge, "Age");
+                this.Age = newAge;
+            }
+            if (info.ContainsKey("Phone"))
+                this.Phone = info["Phone"];
+            if (info.ContainsKey("Email"))
+                this.Email = info["Email"];
+            if (info.ContainsKey("Class"))
+                this.Class = info["Class"];
+            if(info.ContainsKey("Miles"))
+            {
+                UInt64 newMiles;
+                ParseUIntField(info["Miles"], out newMiles, "miles");
+            }
+        }
+
     }
 }

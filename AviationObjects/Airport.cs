@@ -28,15 +28,9 @@ namespace projekt_Jan_Machalski
             AMSL = default(Single);
             Country = string.Empty;
         }
-        public Airport(Dictionary<string, string> dic)
+        public Airport(Dictionary<string, string> dic):this()
         {
-            Name = string.Empty;
-            Code = string.Empty;
-            Longitude = default(Single);
-            Latitude = default(Single);
-            AMSL = default(Single);
-            Country = string.Empty;
-            this.UpdateObject(dic);
+            this.UpdateObject(dic,true);
         }
         
         public Airport(UInt64 id,string name, string code, Single longitude, Single latitude, Single amsl, string country):base(id,"Airport")
@@ -56,31 +50,18 @@ namespace projekt_Jan_Machalski
                 {"Name", this.Name},
                 {"Code", this.Code},
                 {"WorldPosition","{"+Longitude.ToString()+","+Latitude.ToString()+"}" },
-                {"WorldPosition.Longitude",Longitude.ToString() },
-                {"WorldPosition.Latitude", Latitude.ToString() },
+                {"WorldPosition.Long",Longitude.ToString() },
+                {"WorldPosition.Lat", Latitude.ToString() },
                 {"ASML",this.AMSL.ToString()},
                 {"CountryCode", this.Country }
             };
         }
-        public override void UpdateObject(Dictionary<string, string> info)
+        public override void UpdateObject(Dictionary<string, string> info,bool newObject = false)
         {
-            var provider = new NumberFormatInfo();
-            provider.NumberDecimalSeparator = ".";
             var valid = IsDictionaryValid(info);
             if(!valid.valid)
                 throw new InvalidDataException(valid.info);
-            if(info.ContainsKey("ID"))
-            {
-                UInt64 newId;
-                
-                if (!UInt64.TryParse(info["ID"],out newId))
-                {
-                    throw new InvalidDataException($"invalid id value: {info["Id"]}");
-                }
-                var database = Database.Instance;
-                database.ChangeID(this.ID, newId);
-                this.ID = newId;
-            }
+            UpdateID(info, newObject);
             if(info.ContainsKey("Name"))
             {
                 this.Name = info["Name"];
@@ -88,46 +69,38 @@ namespace projekt_Jan_Machalski
             if(info.ContainsKey("WorldPosition"))
             {
                 int lonFrom = info["WorldPosition"].IndexOf("{") + 1;
-                int lonTo = info["worldPosition"].IndexOf(",");
+                int lonTo = info["WorldPosition"].IndexOf(",");
                 string longitude = info["WorldPosition"].Substring(lonFrom, lonTo - lonFrom);
 
                 int latFrom = lonFrom + 1;
                 int latTo = info["WorldPosition"].IndexOf("}");
                 string latitude = info["WorldPosition"].Substring(latFrom,latTo - latFrom);
-                float newLongitude,newLatitude;
-                if(!Single.TryParse(longitude,provider,out newLongitude))
-                {
-                    throw new InvalidDataException($"invalid longitude: {longitude}");
-                }
-                this.Longitude = (Single)newLongitude;
-                if(!Single.TryParse(latitude,provider,out newLatitude))
-                {
-                    throw new InvalidDataException($"invalid latitude: {latitude}");
-                }
-                this.Latitude = (Single)newLatitude;
+                Single newLongitude,newLatitude;
+                ParseSingleField(longitude, out newLongitude, "longitude");
+                this.Longitude = newLongitude;
+
+                ParseSingleField(latitude,out newLatitude, "latitude");
+                this.Latitude = newLatitude;
             }
             else
             {
-                if(info.ContainsKey("Longitude"))
+                if(info.ContainsKey("WorldPosition.Long"))
                 {
-                    float newLongitude;
-                    if (!Single.TryParse(info["Longitude"], provider, out newLongitude))
-                        throw new InvalidDataException($"invalid longitude: {info["Longitude"]}");
-                    this.Longitude= (Single)newLongitude;
-                }if(info.ContainsKey("Latitude"))
+                    Single newLongitude;
+                    ParseSingleField(info["WorldPosition.Lon"], out newLongitude, "longitude");
+                    this.Longitude= newLongitude;
+                }if(info.ContainsKey("WorldPosition.Lat"))
                 {
-                    float newLatitude;
-                    if (!Single.TryParse(info["Latitude"], provider, out newLatitude))
-                        throw new InvalidDataException($"invalid latitude: {info["Latitude"]}");
-                    this.Latitude= (Single)newLatitude;
+                    Single newLatitude;
+                    ParseSingleField(info["WorldPosition.Lat"], out newLatitude, "latitude");
+                    this.Latitude= newLatitude;
                 }
             }
             if(info.ContainsKey("ASML"))
             {
-                float newASML;
-                if (!Single.TryParse(info["ASML"], provider, out newASML))
-                    throw new InvalidDataException("invalid ASML");
-                this.AMSL = (Single)newASML;
+                Single newASML;
+                ParseSingleField(info["ASML"],out newASML, "ASML");
+                this.AMSL = newASML;
             }
             if (info.ContainsKey("CountryCode"))
                 this.Country = info["CountryCode"];

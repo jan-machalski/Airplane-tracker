@@ -8,6 +8,7 @@ namespace projekt_Jan_Machalski
 {
     public class Command
     {
+        public Dictionary<string, string> KeyValueList = new Dictionary<string, string>();
         public List<string> DisplayFields = new List<string>();
         public List<(string, string, string)> Conditions = new List<(string, string, string)>();
         public List<string> Logic = new List<string>();
@@ -62,6 +63,55 @@ namespace projekt_Jan_Machalski
                     throw new InvalidDataException($"incorrect logical operator: {Logic[i]}");
             }
             return objectsToUse;
+        }
+        public (List<(string,string,string)> Conditions, List<string> Logic) GetConditionsAndLogic(int i, string[] inputWords)
+        {
+            if (i < inputWords.Length && inputWords[i] != "where")
+                throw new InvalidDataException("invalid conditions");
+            i++;
+            if (i + 2 < inputWords.Length)
+            {
+                Conditions.Add((inputWords[i], inputWords[i + 1], inputWords[i + 2]));
+                i += 3;
+            }
+            while (i + 3 < inputWords.Length)
+            {
+                Conditions.Add((inputWords[i + 1], inputWords[i + 2], inputWords[i + 3]));
+                Logic.Add(inputWords[i]);
+                i += 4;
+            }
+            return (Conditions, Logic);
+        }
+        public void SetKeyValueList(ref int i, string[] inputWords)
+        {
+            while (i < inputWords.Length && inputWords[i] != "where")
+            {
+                inputWords[i] = inputWords[i].TrimStart('(').TrimEnd(')');
+                if (inputWords[i].Contains('='))
+                {
+                    string[] parts = inputWords[i].Split('=');
+                    KeyValueList.Add(parts[0], parts[1]);
+                    i++;
+                }
+                else if (i < inputWords.Length - 2 && inputWords[i + 1] == "=")
+                {
+                    KeyValueList.Add(inputWords[i], inputWords[i + 2].TrimEnd(')'));
+                    i += 3;
+                }
+                else
+                    throw new ArgumentException("input should be: 'field=value' or 'field = value'");
+            }
+        }
+        public string[] GetInputWords(string input)
+        {
+            input = input.TrimEnd().TrimStart();
+            var inputWords = input.Split(' ');
+            for (int j = 0; j < inputWords.Count(); j++)
+            {
+                if (inputWords[j].EndsWith(','))
+                    inputWords[j] = inputWords[j].Remove(inputWords[j].Length - 1);
+            }
+            return inputWords;
         }
     }
 }

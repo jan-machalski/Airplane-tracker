@@ -45,7 +45,7 @@ namespace projekt_Jan_Machalski
         public override AviationObject CreateAviationObject(Dictionary<string, string> data)
         {
             var newObject = new Airport(data);
-            database.AddObject(newObject );
+            database.AddObject(newObject);
             return newObject;
         }
     }

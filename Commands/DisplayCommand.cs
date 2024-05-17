@@ -12,12 +12,8 @@ namespace projekt_Jan_Machalski
         public DisplayCommand(string input)
         {
             var database = Database.Instance;
-            var inputWords = input.Split(' ');
-            for (int j = 0; j < inputWords.Count(); j++)
-            {
-                if (inputWords[j].EndsWith(','))
-                    inputWords[j] = inputWords[j].Remove(inputWords[j].Length - 1);
-            }
+            var inputWords = GetInputWords(input);
+
             int i = 1;
             while (i < inputWords.Length && inputWords[i] != "from")
             {
@@ -37,20 +33,7 @@ namespace projekt_Jan_Machalski
                 }
             }
             i++;
-            if (i < inputWords.Length && inputWords[i] != "where")
-                throw new InvalidDataException("invalid conditions");
-            i++;
-            if (i + 2 < inputWords.Length)
-            {
-                Conditions.Add((inputWords[i], inputWords[i + 1], inputWords[i + 2]));
-                i += 3;
-            }
-            while (i + 3 < inputWords.Length)
-            {
-                Conditions.Add((inputWords[i + 1], inputWords[i + 2], inputWords[i + 3]));
-                Logic.Add(inputWords[i]);
-                i += 4;
-            }
+            (Conditions, Logic) = GetConditionsAndLogic(i, inputWords);
         }
         public void Execute()
         {

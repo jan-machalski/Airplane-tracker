@@ -45,7 +45,14 @@ namespace projekt_Jan_Machalski
             {"NCP","CP" },
             {"NPP","PP" },
             {"NAI","AI" },
-            {"NFL","FL" }
+            {"NFL","FL" },
+            {"Airport","AI" },
+            {"Crew", "C" },
+            {"Cargo", "CA" },
+            {"Passenger", "P" },
+            {"PassengerPlane", "PP" },
+            {"Flight", "FL" },
+            {"CargoPlane","CP" }
         };
 
         
@@ -71,7 +78,7 @@ namespace projekt_Jan_Machalski
         }
         public AviationObject CreateObject(string code,Dictionary<string,string> data)
         {
-            if (factories.TryGetValue(code, out var factory))
+            if (factories.TryGetValue(ObjectCodeTranslate[code], out var factory))
                 return factory.CreateAviationObject(data);
             throw new ArgumentException("Unknown type: " + code);
         }

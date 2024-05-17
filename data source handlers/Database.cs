@@ -11,6 +11,7 @@ namespace projekt_Jan_Machalski
         public static readonly Lazy<Database> instance = new Lazy<Database>(() => new Database());
         private Database() { }
         public static Database Instance => instance.Value;
+        public UInt64 MaxID = 0;
 
         public Dictionary<UInt64, Airport> AirportInfo = new Dictionary<UInt64, Airport>();
         public Dictionary<UInt64, Cargo> CargoInfo = new Dictionary<UInt64, Cargo>();
@@ -26,7 +27,11 @@ namespace projekt_Jan_Machalski
             {
                 AirportInfo.Add(airport.ID, airport);
                 UsedIDs.Add(airport.ID);
+                if (airport.ID > MaxID)
+                    MaxID = airport.ID;
             }
+            else
+                throw new ArgumentException($"Id: {airport.ID} already in use");
         }
         public void AddObject(Cargo cargo)
         {
@@ -34,7 +39,11 @@ namespace projekt_Jan_Machalski
             {
                 CargoInfo.Add(cargo.ID, cargo);
                 UsedIDs.Add(cargo.ID);
+                if(cargo.ID > MaxID)
+                    MaxID = cargo.ID;
             }
+            else
+                throw new ArgumentException($"Id: {cargo.ID} already in use");
         }
         public void AddObject(CargoPlane cargoPlane)
         {
@@ -42,7 +51,11 @@ namespace projekt_Jan_Machalski
             {
                 CargoPlaneInfo.Add(cargoPlane.ID, cargoPlane);
                 UsedIDs.Add(cargoPlane.ID);
+                if(cargoPlane.ID > MaxID)
+                    MaxID = cargoPlane.ID;
             }
+            else
+                throw new ArgumentException($"Id: {cargoPlane.ID} already in use");
         }
         public void AddObject(Crew crew)
         {
@@ -50,7 +63,11 @@ namespace projekt_Jan_Machalski
             {
                 CrewInfo.Add(crew.ID, crew);
                 UsedIDs.Add(crew.ID);
+                if(crew.ID > MaxID)
+                    MaxID = crew.ID;
             }
+            else
+                throw new ArgumentException($"Id: {crew.ID} already in use");
         }
         public void AddObject(Flight flight)
         {
@@ -58,7 +75,11 @@ namespace projekt_Jan_Machalski
             {
                 FlightInfo.Add(flight.ID, flight);
                 UsedIDs.Add(flight.ID);
+                if(flight.ID > MaxID)
+                    MaxID = flight.ID;
             }
+            else
+                throw new ArgumentException($"Id: {flight.ID} already in use");
         }
 
         public void AddObject(Passenger passenger)
@@ -67,7 +88,11 @@ namespace projekt_Jan_Machalski
             {
                 PassengerInfo.Add(passenger.ID, passenger);
                 UsedIDs.Add(passenger.ID);
+                if(passenger.ID > MaxID)
+                    MaxID = passenger.ID;
             }
+            else
+                throw new ArgumentException($"Id: {passenger.ID} already in use");
         }
         public void AddObject(PassengerPlane passengerPlane)
         {
@@ -75,7 +100,11 @@ namespace projekt_Jan_Machalski
             {
                 PassengerPlaneInfo.Add(passengerPlane.ID, passengerPlane);
                 UsedIDs.Add(passengerPlane.ID);
+                if(passengerPlane.ID > MaxID)
+                    MaxID = passengerPlane.ID;
             }
+            else
+                throw new ArgumentException($"Id: {passengerPlane.ID} already in use");
         }
         public List<AviationObject> GetObjectList(string fieldName)
         {
@@ -83,24 +112,31 @@ namespace projekt_Jan_Machalski
            switch(fieldName)
             {
                 case ("Airport"):
+                case ("Airports"):
                     foreach (var p in AirportInfo) result.Add(p.Value);
                     break;
                 case ("Cargo"):
+                case ("Cargos"):
                     foreach(var p in CargoInfo) result.Add(p.Value);
                     break;
                 case ("CargoPlane"):
+                case ("CargoPlanes"):
                     foreach( var p in CargoPlaneInfo) result.Add(p.Value);
                     break;
                 case ("Crew"):
+                case ("Crews"):
                     foreach(var p in CrewInfo) result.Add(p.Value);
                     break;
                 case ("Flight"):
+                case ("Flights"):
                     foreach(var p in FlightInfo) result.Add(p.Value);
                     break;
                 case ("Passenger"):
+                case ("Passengers"):
                     foreach(var p in PassengerInfo) result.Add(p.Value);
                     break;
                 case ("PassengerPlane"):
+                case ("PassengerPlanes"):
                     foreach(var p in PassengerPlaneInfo)result.Add(p.Value);
                     break;
                 default:
@@ -127,6 +163,7 @@ namespace projekt_Jan_Machalski
                 PassengerInfo.Remove(id);
             else if(PassengerPlaneInfo.ContainsKey(id))
                 PassengerPlaneInfo.Remove(id);
+            UsedIDs.Remove(id);
         }
         public void UpdateContactInfo(UInt64 id, string phoneNumber, string emailAdress)
         {

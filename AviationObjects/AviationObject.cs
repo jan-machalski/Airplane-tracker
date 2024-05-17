@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -34,7 +35,7 @@ namespace projekt_Jan_Machalski
         {
             return null;
         }
-        public virtual void UpdateObject(Dictionary<string,string> info) { }
+        public virtual void UpdateObject(Dictionary<string,string> info, bool newObject = false) { }
         public (bool valid, string info) IsDictionaryValid(Dictionary<string, string> dic)
         {
             var validDic = this.GetInfoDictionary();
@@ -46,6 +47,41 @@ namespace projekt_Jan_Machalski
                 }
             }
             return (true, "");
+        }
+        public void UpdateID(Dictionary<string,string> info,bool newObject)
+        {
+            if (info.ContainsKey("ID"))
+            {
+                UInt64 newId;
+
+                if (!UInt64.TryParse(info["ID"], out newId))
+                {
+                    throw new InvalidDataException($"invalid id value: {info["Id"]}");
+                }
+                if (!newObject)
+                {
+                    var database = Database.Instance;
+                    database.ChangeID(this.ID, newId);
+                    this.ID = newId;
+                }
+                this.ID = newId;
+            }
+        }
+        public void ParseSingleField(string value, out Single field, string fieldName)
+        {
+            var provider = new NumberFormatInfo();
+            provider.NumberDecimalSeparator = ".";
+            if(!Single.TryParse(value,out field))
+            {
+                throw new ArgumentException($"unable to parse the value of {fieldName}: {value}");
+            }
+        }
+        public void ParseUIntField(string value, out UInt64 field, string fieldName)
+        {
+            if(!UInt64.TryParse(value, out field))
+            {
+                throw new ArgumentException($"unable to parse the value of {fieldName}: {value}");
+            }
         }
 
     }
