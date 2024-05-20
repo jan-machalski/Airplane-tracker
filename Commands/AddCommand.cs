@@ -24,7 +24,7 @@ namespace projekt_Jan_Machalski
                 KeyValueList.Add("ID",(database.MaxID + 1).ToString());
             }
         }
-        public void Execute()
+        public override void Execute()
         {
             var manager = AviationObjectFactoryManager.Instance;
             manager.CreateObject(ClassName, KeyValueList);

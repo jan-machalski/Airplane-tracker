@@ -56,7 +56,7 @@ namespace projekt_Jan_Machalski
         {
             var valid = IsDictionaryValid(info);
             if (!valid.valid)
-                throw new InvalidDataException(valid.info);
+                throw new ArgumentException(valid.info);
             UpdateID(info, newObject);
             if(info.ContainsKey("Name"))
                 this.Name = info["Name"];

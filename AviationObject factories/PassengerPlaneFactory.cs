@@ -38,7 +38,9 @@ namespace projekt_Jan_Machalski
         }
         public override AviationObject CreateAviationObject(Dictionary<string, string> data)
         {
-            throw new NotImplementedException();
+            var newObject = new PassengerPlane(data);
+            database.AddObject(newObject);
+            return newObject;
         }
 
     }

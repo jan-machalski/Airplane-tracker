@@ -35,7 +35,7 @@ namespace projekt_Jan_Machalski
             i++;
             (Conditions, Logic) = GetConditionsAndLogic(i, inputWords);
         }
-        public void Execute()
+        public override void Execute()
         {
             var objectsToUse = CheckAffectedObjects(Conditions, Logic);
             List<Dictionary<string, string>> DisplayRows = new List<Dictionary<string, string>>();

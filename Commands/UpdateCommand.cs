@@ -21,7 +21,7 @@ namespace projekt_Jan_Machalski
             SetKeyValueList(ref i, inputWords);
             (Conditions, Logic) = GetConditionsAndLogic(i, inputWords);
         }
-        public void Execute()
+        public override void Execute()
         {
             var objectsToUse = CheckAffectedObjects(Conditions, Logic);
             foreach(var obj in objectsToUse)

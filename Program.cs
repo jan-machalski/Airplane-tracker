@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Timers;
+using DynamicData.Kernel;
 using FlightTrackerGUI;
 using NetworkSourceSimulator;
 
@@ -13,11 +14,7 @@ namespace projekt_Jan_Machalski
     {
         static void Main()
         {
-            LoadFTR();
-            Database database = Database.Instance;
-            CommandTests.TestCrew();
-            
-
+          
             Logger.LogMessage("Program started!");
             RunCommandPrompt();
         }
@@ -37,55 +34,98 @@ namespace projekt_Jan_Machalski
             bool running = true;
             string command;
 
+            DisplayHelp();
             do
             {
-                Console.WriteLine("Commands:" +
-                        "\n-run:\t\trun NSS simulation" +
-                        "\n-ftr:\t\tload data from FTR file" +
-                        "\n-track:\t\tdisplay the flight tracker "+
-                        "\n-report\t\treport all news"+
-                        "\n-print:\t\tcreate a snapshot" +
-                        "\n-exit:\t\texit programm\n");
+                Console.WriteLine("Insert command");
                 command = Console.ReadLine();
                 Console.WriteLine();
-                switch (command)
+                try
                 {
-                    case "ftr":
-                        LoadFTR();
-                        ftrLoaded = true;
-                        break;
-                    case "run":
-                        if (ftrLoaded == false)
-                            Console.WriteLine("FTR file has to be loaded before starting simulation");
-                        else
-                            simulation.RunSimulation();
-                        break;
-                    case "track":
-                        if (!trackerStarted)
-                            FlightGUIRunner.RunFlightGUI();
-                        else
-                            Console.WriteLine("Flight tracker GUI can only be started once per each programm start");
-                        trackerStarted = true;
-                        break;
-                    case "report":
-                        GenerateAllNews(); 
-                        break;
-                    case "print":
-                        simulation.CreateSnapshot();
-                        break;
-                    case "exit":
-                        Console.WriteLine("exiting...");
-                        Logger.LogMessage("Program exited!\n");
-                        running = false;
-                        break;
-                    default:
-                        Console.WriteLine("incorrect command");
-                        break;
+                    switch (command)
+                    {
+                        case "help":
+                            DisplayHelp();
+                            break;
+                        case "ftr":
+                            LoadFTR();
+                            ftrLoaded = true;
+                            break;
+                        case "run":
+                            if (ftrLoaded == false)
+                                Console.WriteLine("FTR file has to be loaded before starting simulation");
+                            else
+                                simulation.RunSimulation();
+                            break;
+                        case "track":
+                            if (!trackerStarted)
+                                FlightGUIRunner.RunFlightGUI();
+                            else
+                                Console.WriteLine("Flight tracker GUI can only be started once per each programm start");
+                            trackerStarted = true;
+                            break;
+                        case "report":
+                            GenerateAllNews();
+                            break;
+                        case "print":
+                            simulation.CreateSnapshot();
+                            break;
+                        case "exit":
+                            Console.WriteLine("exiting...");
+                            Logger.LogMessage("Program exited!\n");
+                            running = false;
+                            break;
+                        default:
+                            if(command.StartsWith("display",StringComparison.OrdinalIgnoreCase))
+                            {
+                                var cmd = new DisplayCommand(command);
+                                cmd.Execute();
+                            }
+                            else if(command.StartsWith("add", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var cmd = new AddCommand(command);
+                                cmd.Execute();
+                            }
+                            else if(command.StartsWith("update", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var cmd = new UpdateCommand(command);
+                                cmd.Execute();
+                            }
+                            else if(command.StartsWith("delete",StringComparison.OrdinalIgnoreCase))
+                            {
+                                var cmd = new DeleteCommand(command);
+                                cmd.Execute();
+                            }
+                            else
+                            {
+                                throw new ArgumentException("invalid command");
+                            }
+                            break;
+                    }
+                }
+                catch(ArgumentException e)
+                {
+                    Console.WriteLine($"Error: {e.Message}");
                 }
 
             } while (running);
         }
 
+        public static void DisplayHelp()
+        {
+            Console.WriteLine("Commands:" +
+                      "\n-help:\t\tdisplay help"+
+                      "\n-run:\t\trun NSS simulation" +
+                      "\n-ftr:\t\tload data from FTR file" +
+                      "\n-track:\t\tdisplay the flight tracker " +
+                      "\n-display:\t\tdisplay objects from database" +
+                      "\n-delete:\t\tdelete objects from database" +
+                      "\n-add:\t\tadd an object to the database" +
+                      "\n-update\t\tupdate objects in the database" +
+                      "\n-report\t\treport all news" +
+                      "\n-print:\t\tcreate a snapshot" +
+                      "\n-exit:\t\texit programm\n");
+        }
         static void LoadFTR()
         {
             string FTR_file_path = "example_data.ftr";

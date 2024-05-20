@@ -19,9 +19,42 @@ namespace projekt_Jan_Machalski
         {
             MaxLoad = maxLoad;
         }
+        public CargoPlane(Dictionary<string,string> dic):this()
+        {
+            UpdateObject(dic);
+        }
         public string Report(IMedia media)
         {
             return media.Report(this);
+        }
+        public override Dictionary<string, string> GetInfoDictionary()
+        {
+            return new Dictionary<string, string>
+            {
+                {"ID", this.ID.ToString() },
+                {"Serial",this.Serial.ToString()},
+                {"CountryCode", this.Country.ToString()},
+                {"Model", this.Model.ToString()},
+                {"MaxLoad", this.MaxLoad.ToString()},
+            };
+        }
+        public override void UpdateObject(Dictionary<string, string> info, bool newObject = false)
+        {
+            var valid = IsDictionaryValid(info);
+            if (!valid.valid)
+                throw new ArgumentException(valid.info);
+            UpdateID(info, newObject);
+            if (info.ContainsKey("Serial"))
+                this.Serial = info["Serial"];
+            if (info.ContainsKey("CountryCode"))
+                this.Country = info["CountryCode"];
+            if (info.ContainsKey("Model"))
+                this.Model = info["Model"];
+            if(info.ContainsKey("MaxLoad"))
+            {
+                Single newMaxLoad;
+                ParseSingleField(info["MaxLoad"], out newMaxLoad, "MaxLoad");
+            }
         }
     }
 }

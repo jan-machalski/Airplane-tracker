@@ -22,14 +22,15 @@ namespace projekt_Jan_Machalski
         public Load[] Load { get; set; }
         public Flight():base()
         {
-            Origin = null;
-            Destination = null;
+            Database database = Database.Instance;
+            Origin = database.AirportInfo.First().Value;
+            Destination = database.AirportInfo.First().Value;
             TakeOffTime = string.Empty;
             LandingTime = string.Empty;
             Longitude = default(Single);
             Latitude = default(Single);
             AMSL = default(Single);
-            Plane = null;
+            Plane = database.PassengerPlaneInfo.First().Value;
             Crew = null;
             Load = null;
         }
@@ -75,6 +76,10 @@ namespace projekt_Jan_Machalski
             for (int i = 0; i < this.Load.Length; i++)
                 this.Load[i] = flight.Load[i];
         }
+        public Flight(Dictionary<string,string> dic):this()
+        {
+            UpdateObject(dic);
+        }
         public virtual (string takeOffTime,string landingTime) GetFlightTime()
         {
             return (this.TakeOffTime, this.LandingTime);
@@ -82,6 +87,131 @@ namespace projekt_Jan_Machalski
         public virtual (Single Latitude,Single Longitude) GetOriginPos()
         {
             return (this.Origin.Latitude, this.Origin.Longitude);
+        }
+        public override Dictionary<string, string> GetInfoDictionary()
+        {
+            var result = new Dictionary<string, string>()
+            {
+                {"ID", this.ID.ToString()},
+                {"Origin",this.Origin.ToString() },
+                {"Target",this.Destination.ToString()},
+                { "WorldPosition","{" + Longitude.ToString() + "," + Latitude.ToString() + "}" },
+                { "WorldPosition.Long",Longitude.ToString() },
+                { "WorldPosition.Lat", Latitude.ToString() },
+                {"AMSL", this.AMSL.ToString() },
+                {"Plane", this.Plane.ToString() },
+                {"TakeOffTime", this.TakeOffTime.ToString() },
+                {"LandingTime", this.LandingTime.ToString() }
+            };
+            foreach(var s in Origin.GetInfoDictionary())
+            {
+                result.Add("Origin." + s.Key, s.Value);
+            }
+            foreach(var s in Destination.GetInfoDictionary())
+            {
+                result.Add("Target."+s.Key, s.Value);
+            }
+            foreach(var s in Plane.GetInfoDictionary())
+            {
+                result.Add("Plane." + s.Key, s.Value);
+            }
+            return result;
+        }
+        public override void UpdateObject(Dictionary<string, string> info, bool newObject = false)
+        {
+            Database database = Database.Instance;
+            var valid = IsDictionaryValid(info);
+            if (!valid.valid)
+                throw new ArgumentException(valid.info);
+            UpdateID(info, newObject);
+            if(info.ContainsKey("TakeOffTime") && DateTime.TryParseExact(info["TakeOffTime"],"HH:mm",CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+                this.TakeOffTime = info["TakeOffTime"];
+            if (info.ContainsKey("LandingTime") && DateTime.TryParseExact(info["LandingTime"], "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+                this.LandingTime = info["LandingTime"];
+            if(info.ContainsKey("ASML"))
+            {
+                Single newASML;
+                ParseSingleField(info["ASML"], out newASML, "ASML");
+                this.AMSL = newASML;
+            }
+            if(info.ContainsKey("Origin.ID"))
+            {
+                UInt64 newID;
+                ParseUIntField(info["Origin.ID"], out newID, "Origin.ID");
+                if (database.AirportInfo.ContainsKey(newID))
+                    this.Origin = database.AirportInfo[newID];
+                else
+                    throw new ArgumentException($"No airport wit ID={newID} in the database");
+            }
+            else
+            {
+                foreach (var p in info.Keys)
+                    if (p.StartsWith("Origin."))
+                        throw new ArgumentException("Unable to modify the airport parameters by updating flight");
+            }
+            if (info.ContainsKey("Target.ID"))
+            {
+                UInt64 newID;
+                ParseUIntField(info["Target.ID"], out newID, "Target.ID");
+                if (database.AirportInfo.ContainsKey(newID))
+                    this.Destination = database.AirportInfo[newID];
+                else
+                    throw new ArgumentException($"No airport wit ID={newID} in the database");
+            }
+            else
+            {
+                foreach (var p in info.Keys)
+                    if (p.StartsWith("Target."))
+                        throw new ArgumentException("Unable to modify the airport parameters by updating flight");
+            }
+            if (info.ContainsKey("Plane.ID"))
+            {
+                UInt64 newID;
+                ParseUIntField(info["Plane.ID"], out newID, "Plane.ID");
+                if (database.PassengerPlaneInfo.ContainsKey(newID))
+                    this.Plane = database.PassengerPlaneInfo[newID];
+                else if(database.CargoPlaneInfo.ContainsKey(newID))
+                    this.Plane = database.CargoPlaneInfo[newID];
+                else
+                    throw new ArgumentException($"No airport wit ID={newID} in the database");
+            }
+            else
+            {
+                foreach (var p in info.Keys)
+                    if (p.StartsWith("Plane."))
+                        throw new ArgumentException("Unable to modify the airport parameters by updating flight");
+            }
+            if (info.ContainsKey("WorldPosition"))
+            {
+                int lonFrom = info["WorldPosition"].IndexOf("{") + 1;
+                int lonTo = info["WorldPosition"].IndexOf(",");
+                string longitude = info["WorldPosition"].Substring(lonFrom, lonTo - lonFrom);
+
+                int latFrom = lonFrom + 1;
+                int latTo = info["WorldPosition"].IndexOf("}");
+                string latitude = info["WorldPosition"].Substring(latFrom, latTo - latFrom);
+                Single newLongitude, newLatitude;
+                ParseSingleField(longitude, out newLongitude, "longitude");
+
+                ParseSingleField(latitude, out newLatitude, "latitude");
+                database.UpdateFlightPos(this.ID, newLongitude, newLatitude,this.AMSL);
+            }
+            else
+            {
+                double newLongitude = this.Longitude;
+                double newLatitude = this.Latitude;
+                if (info.ContainsKey("WorldPosition.Long"))
+                {
+                    ParseDoubleField(info["WorldPosition.Long"], out newLongitude, "longitude");
+                    this.Longitude = newLongitude;
+                }
+                if (info.ContainsKey("WorldPosition.Lat"))
+                {
+                    ParseDoubleField(info["WorldPosition.Lat"], out newLatitude, "latitude");
+                    this.Latitude = newLatitude;
+                }
+                database.UpdateFlightPos(this.ID, (float)newLongitude, (float)newLatitude, this.AMSL);
+            }
         }
     }
     public class FlightWithUpdatedPos : Flight

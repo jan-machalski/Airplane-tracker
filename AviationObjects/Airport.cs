@@ -60,7 +60,7 @@ namespace projekt_Jan_Machalski
         {
             var valid = IsDictionaryValid(info);
             if(!valid.valid)
-                throw new InvalidDataException(valid.info);
+                throw new ArgumentException(valid.info);
             UpdateID(info, newObject);
             if(info.ContainsKey("Name"))
             {
@@ -87,7 +87,7 @@ namespace projekt_Jan_Machalski
                 if(info.ContainsKey("WorldPosition.Long"))
                 {
                     Single newLongitude;
-                    ParseSingleField(info["WorldPosition.Lon"], out newLongitude, "longitude");
+                    ParseSingleField(info["WorldPosition.Long"], out newLongitude, "longitude");
                     this.Longitude= newLongitude;
                 }if(info.ContainsKey("WorldPosition.Lat"))
                 {
@@ -104,7 +104,21 @@ namespace projekt_Jan_Machalski
             }
             if (info.ContainsKey("CountryCode"))
                 this.Country = info["CountryCode"];
-        } 
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("{");
+            foreach(var p in this.GetInfoDictionary())
+            {
+                if(!p.Key.Contains('.'))
+                    sb.Append(p.Value.ToString() + ", ");
+            }
+            sb.Length = sb.Length - 1;
+            sb.Append("}");
+            return sb.ToString();
+        }
 
         public string Report(IMedia media)
         {

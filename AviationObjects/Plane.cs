@@ -28,5 +28,18 @@ namespace projekt_Jan_Machalski
             Model = model;
             Flight = null;
         }
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("{");
+            foreach (var p in this.GetInfoDictionary())
+            {
+                sb.Append(p.Value.ToString() + ", ");
+            }
+            sb.Length-=2;
+            sb.Append('}');
+            return sb.ToString();
+
+        }
     }
 }

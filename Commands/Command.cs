@@ -13,6 +13,10 @@ namespace projekt_Jan_Machalski
         public List<(string, string, string)> Conditions = new List<(string, string, string)>();
         public List<string> Logic = new List<string>();
         public List<AviationObject> AffectedObjects = new List<AviationObject>();
+        public virtual void Execute()
+        {
+            throw new NotImplementedException();
+        }
         public List<AviationObject> CheckCondition(string field, string sign, string value)
         {
             List<AviationObject> result = new List<AviationObject>();
@@ -20,7 +24,7 @@ namespace projekt_Jan_Machalski
             {
                 var dic = item.GetInfoDictionary();
                 if (!dic.ContainsKey(field))
-                    throw new InvalidDataException($"invalid field name: {field}");
+                    throw new ArgumentException($"invalid field name: {field}");
                 if (sign == "=")
                 {
                     if (value == dic[field])
@@ -34,14 +38,14 @@ namespace projekt_Jan_Machalski
                 else if (sign == ">=" || sign == "<=")
                 {
                     if (!float.TryParse(dic[field], out var curVal))
-                        throw new InvalidDataException($"unable to use >= for non numeric field: {field}");
+                        throw new ArgumentException($"unable to use >= for non numeric field: {field}");
                     if (!float.TryParse(value, out var cmpVal))
-                        throw new InvalidDataException($"Invalid cmp value");
+                        throw new ArgumentException($"Invalid cmp value");
                     if((sign == "<=" && curVal<=cmpVal) || (sign == ">=" && curVal >= cmpVal))
                         result.Add(item);
                 }
                 else
-                    throw new InvalidDataException($"invalid cmp sign: {sign}");
+                    throw new ArgumentException($"invalid cmp sign: {sign}");
             }
             return result;
         }
@@ -60,7 +64,7 @@ namespace projekt_Jan_Machalski
                 else if (Logic[i] == "and")
                     objectsToUse = objectsToUse.Intersect(newObjectsToCheck).ToList();
                 else
-                    throw new InvalidDataException($"incorrect logical operator: {Logic[i]}");
+                    throw new ArgumentException($"incorrect logical operator: {Logic[i]}");
             }
             return objectsToUse;
         }

@@ -16,7 +16,7 @@ namespace projekt_Jan_Machalski
             int i = 2;
             (Conditions, Logic) = GetConditionsAndLogic(i, inputWords);
         }
-        public void Execute()
+        public override void Execute()
         {
             int counter = 0;
             Database database = Database.Instance;

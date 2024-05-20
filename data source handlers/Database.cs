@@ -140,7 +140,7 @@ namespace projekt_Jan_Machalski
                     foreach(var p in PassengerPlaneInfo)result.Add(p.Value);
                     break;
                 default:
-                    throw new InvalidDataException($"Invalid object class name: {fieldName}");
+                    throw new ArgumentException($"Invalid object class name: {fieldName}");
 
             }
             return result;

@@ -56,7 +56,7 @@ namespace projekt_Jan_Machalski
 
                 if (!UInt64.TryParse(info["ID"], out newId))
                 {
-                    throw new InvalidDataException($"invalid id value: {info["Id"]}");
+                    throw new ArgumentException($"invalid id value: {info["Id"]}");
                 }
                 if (!newObject)
                 {
@@ -79,6 +79,20 @@ namespace projekt_Jan_Machalski
         public void ParseUIntField(string value, out UInt64 field, string fieldName)
         {
             if(!UInt64.TryParse(value, out field))
+            {
+                throw new ArgumentException($"unable to parse the value of {fieldName}: {value}");
+            }
+        }
+        public void ParseShortField(string value, out UInt16 field, string fieldName)
+        {
+            if (!UInt16.TryParse(value, out field))
+            {
+                throw new ArgumentException($"unable to parse the value of {fieldName}: {value}");
+            }
+        }
+        public void ParseDoubleField(string value, out double field, string fieldName)
+        {
+            if (!double.TryParse(value, out field))
             {
                 throw new ArgumentException($"unable to parse the value of {fieldName}: {value}");
             }
