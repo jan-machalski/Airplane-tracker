@@ -115,7 +115,7 @@ namespace projekt_Jan_Machalski
                 if(!p.Key.Contains('.'))
                     sb.Append(p.Value.ToString() + ", ");
             }
-            sb.Length = sb.Length - 1;
+            sb.Length = sb.Length - 2;
             sb.Append("}");
             return sb.ToString();
         }

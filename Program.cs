@@ -117,8 +117,8 @@ namespace projekt_Jan_Machalski
                       "\n-run:\t\trun NSS simulation" +
                       "\n-ftr:\t\tload data from FTR file" +
                       "\n-track:\t\tdisplay the flight tracker " +
-                      "\n-display:\t\tdisplay objects from database" +
-                      "\n-delete:\t\tdelete objects from database" +
+                      "\n-display:\tdisplay objects from database" +
+                      "\n-delete:\tdelete objects from database" +
                       "\n-add:\t\tadd an object to the database" +
                       "\n-update\t\tupdate objects in the database" +
                       "\n-report\t\treport all news" +

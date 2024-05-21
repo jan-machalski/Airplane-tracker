@@ -48,7 +48,7 @@ namespace projekt_Jan_Machalski
                     if (d.ContainsKey(field))
                         row[field] = d[field];
                     else
-                        throw new InvalidDataException($"incorrect data field: {field}");
+                        throw new ArgumentException($"incorrect data field: {field}");
                 }
                 DisplayRows.Add(row);
             }

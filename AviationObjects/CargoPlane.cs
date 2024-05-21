@@ -54,6 +54,7 @@ namespace projekt_Jan_Machalski
             {
                 Single newMaxLoad;
                 ParseSingleField(info["MaxLoad"], out newMaxLoad, "MaxLoad");
+                this.MaxLoad = newMaxLoad;
             }
         }
     }

@@ -76,6 +76,7 @@ namespace projekt_Jan_Machalski
             {
                 UInt64 newMiles;
                 ParseUIntField(info["Miles"], out newMiles, "miles");
+                this.Miles = newMiles;
             }
         }
 
