@@ -109,6 +109,8 @@ namespace projekt_Jan_Machalski
         public List<AviationObject> GetObjectList(string fieldName)
         {
             List<AviationObject> result = new List<AviationObject>();
+            if (char.IsLower(fieldName[0]))
+                fieldName = char.ToUpper(fieldName[0]) + fieldName.Substring(1);
            switch(fieldName)
             {
                 case ("Airport"):

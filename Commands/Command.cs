@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetTopologySuite.IO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -72,34 +73,94 @@ namespace projekt_Jan_Machalski
         {
             if (i < inputWords.Length && inputWords[i] != "where")
                 throw new InvalidDataException("invalid conditions");
-            i++;
-            if (i + 2 < inputWords.Length)
+            List<string> inputParts = new List<string>();
+            int j = i + 1;
             {
-                Conditions.Add((inputWords[i], inputWords[i + 1], inputWords[i + 2]));
+                while(j < inputWords.Length)
+                {
+                    char firstChar = inputWords[j][0];
+                    
+                    if (firstChar == '"' || firstChar == '\'')
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append(inputWords[j].Substring(1));
+                        char lastChar = inputWords[j][inputWords[j].Length - 1];
+                        while(lastChar != firstChar && j+1 < inputWords.Length)
+                        {
+                            sb.Append(' ' + inputWords[++j]);
+                            lastChar = inputWords[j][inputWords[j].Length - 1];
+                        }
+                        if (j == inputWords.Length && lastChar != firstChar)
+                            throw new ArgumentException("Missing quotation mark in conditions list");
+                        else
+                        {
+                            sb.Length = sb.Length - 1;
+                            inputParts.Add(sb.ToString());
+                        }
+                    }
+                    else 
+                        inputParts.Add(inputWords[j]);
+                    j++;
+                }
+            }
+            var inputPartsArray = inputParts.ToArray();
+            i=0;
+            if (i + 2 < inputPartsArray.Length)
+            {
+                Conditions.Add((inputPartsArray[i], inputPartsArray[i + 1], inputPartsArray[i + 2]));
                 i += 3;
             }
-            while (i + 3 < inputWords.Length)
+            while (i + 3 < inputPartsArray.Length)
             {
-                Conditions.Add((inputWords[i + 1], inputWords[i + 2], inputWords[i + 3]));
-                Logic.Add(inputWords[i]);
+                Conditions.Add((inputPartsArray[i + 1], inputPartsArray[i + 2], inputPartsArray[i + 3]));
+                Logic.Add(inputPartsArray[i]);
                 i += 4;
             }
             return (Conditions, Logic);
         }
-        public void SetKeyValueList(ref int i, string[] inputWords)
+        public void SetKeyValueList(ref int j, string[] inputWords)
         {
-            while (i < inputWords.Length && inputWords[i] != "where")
+            List<string> inputParts = new List<string>();
+            while(j < inputWords.Length && inputWords[j] != "where") 
             {
-                inputWords[i] = inputWords[i].TrimStart('(').TrimEnd(')');
-                if (inputWords[i].Contains('='))
+                char firstChar = inputWords[j][0];
+                    
+                    if (firstChar == '"' || firstChar == '\'')
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append(inputWords[j].Substring(1));
+                        char lastChar = inputWords[j][inputWords[j].Length - 1];
+                        while(lastChar != firstChar && j+1 < inputWords.Length)
+                        {
+                            sb.Append(' ' + inputWords[++j]);
+                            lastChar = inputWords[j][inputWords[j].Length - 1];
+                        }
+                        if (j == inputWords.Length && lastChar != firstChar)
+                            throw new ArgumentException("Missing quotation mark in key value list");
+                        else
+                        {
+                            sb.Length = sb.Length - 1;
+                            inputParts.Add(sb.ToString());
+                        }
+                    }
+                    else 
+                        inputParts.Add(inputWords[j]);
+                    j++;
+            }
+            var inputPartsArray = inputParts.ToArray();
+            int i = 0;
+            while (i < inputPartsArray.Length)
+            {
+                inputPartsArray[i] = inputPartsArray[i].TrimStart('(').TrimEnd(')');
+                if (inputPartsArray[i].Contains('='))
                 {
-                    string[] parts = inputWords[i].Split('=');
+                    string[] parts = inputPartsArray[i].Split('=');
                     KeyValueList.Add(parts[0], parts[1]);
                     i++;
                 }
-                else if (i < inputWords.Length - 2 && inputWords[i + 1] == "=")
+                else if (i < inputPartsArray.Length - 2 && inputPartsArray[i + 1] == "=")
                 {
-                    KeyValueList.Add(inputWords[i], inputWords[i + 2].TrimEnd(')'));
+                    KeyValueList.Add(inputPartsArray[i], inputPartsArray[i + 2].TrimEnd(')'));
                     i += 3;
                 }
                 else

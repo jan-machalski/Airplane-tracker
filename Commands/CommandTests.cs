@@ -31,7 +31,7 @@ namespace projekt_Jan_Machalski
         }
         public static void TestCargo()
         {
-            var test0 = new DisplayCommand("display * from Cargo where weight >= 15");
+            var test0 = new DisplayCommand("display * from Cargo where Weight >= 15");
             test0.Execute();
             var test4b = new AddCommand("add Cargo new Weight = 100 ID = 9999 Code = aaaabb Description = newcargo");
             test4b.Execute();

@@ -57,6 +57,11 @@ namespace projekt_Jan_Machalski
         }
         static void DisplayTable(List<Dictionary<string, string>> rows)
         {
+            if (rows.Count == 0)
+            {
+                Console.WriteLine("No objects matching conditions");
+                return;
+            }
             var headers = rows.SelectMany(dict => dict.Keys).Distinct().ToList();
 
             var columnWidths = headers.ToDictionary(

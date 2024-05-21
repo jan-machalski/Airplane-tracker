@@ -14,7 +14,6 @@ namespace projekt_Jan_Machalski
     {
         static void Main()
         {
-          
             Logger.LogMessage("Program started!");
             RunCommandPrompt();
         }

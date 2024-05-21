@@ -56,7 +56,7 @@ namespace projekt_Jan_Machalski
 
                 if (!UInt64.TryParse(info["ID"], out newId))
                 {
-                    throw new ArgumentException($"invalid id value: {info["Id"]}");
+                    throw new ArgumentException($"invalid id value: {info["ID"]}");
                 }
                 if (!newObject)
                 {
