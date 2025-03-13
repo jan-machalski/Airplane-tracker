@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ExCSS;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,12 @@ namespace projekt_Jan_Machalski
         {
             var database = Database.Instance;
             var inputWords = GetInputWords(input);
+            
+            if(inputWords.Length == 0)
+            {
+                Console.WriteLine("Usage: display [field name] from [object name]");
+                return;
+            }
 
             int i = 1;
             while (i < inputWords.Length && inputWords[i] != "from")

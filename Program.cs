@@ -120,8 +120,8 @@ namespace projekt_Jan_Machalski
                       "\n-display:\tdisplay objects from database" +
                       "\n-delete:\tdelete objects from database" +
                       "\n-add:\t\tadd an object to the database" +
-                      "\n-update\t\tupdate objects in the database" +
-                      "\n-report\t\treport all news" +
+                      "\n-update:\t\tupdate objects in the database" +
+                      "\n-report:\t\treport all news" +
                       "\n-print:\t\tcreate a snapshot" +
                       "\n-exit:\t\texit programm\n");
         }
